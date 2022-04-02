@@ -1,13 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
+import pprint
 
 SESSION = requests.Session()
 
-def login(username, password):
-    ''' Simply logs in the session, takes 2 strings for username and password, this must be called before scraping assignments '''
+def moodleLogin(username, password):
+    ''' Simply logs in the session to moodle, takes 2 strings for username and password, this must be called before scraping assignments '''
     
     # payload for login POST request
-    login_data = {
+    loginData = {
         'username': username,
         'password': password,
         '_eventId': 'submit',
@@ -19,11 +20,11 @@ def login(username, password):
     r = SESSION.get(url)
     # use bs to find hidden title "execution" value and attach to payload
     soup = BeautifulSoup(r.content, 'html5lib')
-    login_data['execution'] = soup.find('input', attrs={'name': 'execution'})['value']
+    loginData['execution'] = soup.find('input', attrs={'name': 'execution'})['value']
     # send post request to log in
-    r = SESSION.post(url, data = login_data)
+    r = SESSION.post(url, data = loginData)
     
-def getAssignments():
+def getMoodleAssignments():
     ''' Once session is logged in, this will pull every event (unfiltered) and return a list of dictionaries for each event '''
     assignmentDictList = []
     # go to calendar page
@@ -49,4 +50,51 @@ def getAssignments():
             'Date': eventDate.text,
             'Class': eventClass
         })
+    return assignmentDictList
+
+def webworkLogin(username, password, className):
+    ''' Logs the session in to webwork, takes 3 strings, the username, password, and the EXACT name of the webwork class, must be called before scraping off webwork '''
+    
+    # payload for POST login request
+    loginData = {
+        'user': username,
+        'passwd': password
+    }
+    
+    # send post request
+    url = "https://webwork.latech.edu/webwork2/" + className + "/"
+    r = SESSION.post(url, data = loginData)
+    
+def getWebworkAssignments(className):
+    ''' Once session is logged in, this will pull every assignment (unfiltered) and return a list of dictionaries for each event '''
+    assignmentDictList = []
+    # get the webpage
+    url = "https://webwork.latech.edu/webwork2/" + className + "/"
+    r = SESSION.get(url)
+    soup = BeautifulSoup(r.content, 'html5lib')
+    
+    # get each assignment
+    for assignment in soup.find_all('tr'):
+        # count for amount of details have 'a' element
+        aCount = 0
+        eventDate = None
+        # get details of each assignment
+        for details in assignment.find_all('td'):
+            # only get 'a' element text from second detail that has an 'a' element
+            if details.a != None:
+                if aCount == 1:
+                    eventName = details.a.text
+                # if this detail has an 'a' element, but aCount = 0, it is the first detail with an 'a' element, but does not have the event name
+                else:
+                    aCount += 1
+            # if detail does not have 'a' element, it has the date
+            else:
+                eventDate = details.text
+                aCount = 0
+        # add event to dictionary list
+        if eventDate != None:
+            assignmentDictList.append({
+                'Event': eventName,
+                'Date': eventDate
+            })
     return assignmentDictList
