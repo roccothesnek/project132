@@ -18,11 +18,18 @@ def moodleLogin(username, password):
     # go to login page
     url = "https://cas.latech.edu/cas/login?service=https%3A%2F%2Fmoodle.latech.edu%2Flogin%2Findex.php"
     r = SESSION.get(url)
-    # use bs to find hidden title "execution" value and attach to payload
+    
+    # check if already logged in
     soup = BeautifulSoup(r.content, 'html5lib')
-    loginData['execution'] = soup.find('input', attrs={'name': 'execution'})['value']
-    # send post request to log in
-    r = SESSION.post(url, data = loginData)
+    if soup.find('form', id = 'fm1') != None:
+        # use bs to find hidden title "execution" value and attach to payload
+        soup = BeautifulSoup(r.content, 'html5lib')
+        loginData['execution'] = soup.find('input', attrs={'name': 'execution'})['value']
+        # send post request to log in
+        r = SESSION.post(url, data = loginData)
+    # if SESSION is already logged in, return -1
+    else:
+        return -1
     
 def getMoodleAssignments():
     ''' Once session is logged in, this will pull every event (unfiltered) and return a list of dictionaries for each event '''
@@ -50,7 +57,10 @@ def getMoodleAssignments():
             'Date': eventDate.text,
             'Class': eventClass
         })
-    return assignmentDictList
+    if assignmentDictList != []:
+        return assignmentDictList
+    else:
+        return None
 
 def webworkLogin(username, password, className):
     ''' Logs the session in to webwork, takes 3 strings, the username, password, and the EXACT name of the webwork class, must be called before scraping off webwork '''
@@ -97,4 +107,8 @@ def getWebworkAssignments(className):
                 'Event': eventName,
                 'Date': eventDate
             })
-    return assignmentDictList
+    if assignmentDictList != []:
+        return assignmentDictList
+    else:
+        return None
+    
