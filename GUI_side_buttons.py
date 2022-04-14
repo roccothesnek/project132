@@ -46,7 +46,7 @@ alarm_frame = Frame(root_window)
 login_frame = Frame(root_window)
 
 # render each frame
-# The buttons automatically span the height of the window (even after adjustments)
+# The button frame automatically spans the height of the window (even after adjustments)
 # and the display frame automatically spans the height and the width.
 control_frame.grid(row=0, column=0, sticky="nsew")
 home_frame.grid(row=0, column=1, sticky="nsew")
