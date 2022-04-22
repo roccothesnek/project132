@@ -14,6 +14,7 @@
 
 from tkinter import *
 import time
+import scrape
 
 # user input
 ALARM_TIME = None
@@ -31,8 +32,6 @@ def setTime():
         ALARM_TIME = currentHour.get() + " " + currentMinute.get()
     else:
         ALARM_TIME = str(int(currentHour.get()) + 12) + " " + currentMinute.get()
-    
-    print(ALARM_TIME)
 
 # set the credentials when the user confirms it
 def setCredentials():
@@ -40,8 +39,18 @@ def setCredentials():
     global PASSWORD
     USERNAME = usernameBox.get("1.0", END)
     PASSWORD = passwordBox.get("1.0", END)
-    print(USERNAME)
-    print(PASSWORD)
+    USERNAME = USERNAME.strip()
+    PASSWORD = PASSWORD.strip()
+
+def filterAssignments(assignments):
+    filteredAssignments = []
+    for assignment in assignments:
+        if (assignment["Event"].endswith("closes") or assignment["Event"].endswith("is due")):
+            if "Tomorrow" in assignment["Date"]:
+                filteredAssignments.append(assignment["Event"] + " " + assignment["Date"] + " in " + assignment["Class"])
+            else:
+                filteredAssignments.append(assignment["Event"] + " on " + assignment["Date"] + " in " + assignment["Class"])
+    return filteredAssignments
 
 # define the root_window
 root_window = Tk()
@@ -93,6 +102,10 @@ def clockTime():
         timeLabel.config(text = textTime)
     timeLabel.after(200, clockTime)
 clockTime()
+
+# Assignments Label
+assignmentsLabel = Label(home_frame, font = ("Calibri", 12), bg = 'light gray')
+assignmentsLabel.place(x = 50, y = 200, height = 200, width = 650)
 #####################################
 
 ####### Control Frame Widgets #######
@@ -142,6 +155,28 @@ passwordBox = Text(control_frame, font = ("Calibri", 25))
 passwordBox.place(x = 545, y = 350, height = 40, width = 140)
 ####################################
 
+def main():
+    global ALARM_TIME
+    global USERNAME
+    global PASSWORD
+    if ALARM_TIME != None:
+        hrMin = ALARM_TIME.split()
+        if int(hrMin[0]) == int(time.strftime("%H")) and int(hrMin[1]) == int(time.strftime("%M")):
+            if USERNAME != None and PASSWORD != None:
+                print("attempting to log in with " + USERNAME + ", " + PASSWORD)
+                scrape.moodleLogin(USERNAME, PASSWORD)
+                unfilteredAssignments = scrape.getMoodleAssignments()
+                filteredAssignments = filterAssignments(unfilteredAssignments)
+            assignments = ""
+            for assignment in filteredAssignments:
+                assignments += assignment + "\n"
+            assignmentsLabel.config(text = assignments)
+            print("ASSIGNMENTS: " + assignments)
+            ALARM_TIME = None
+    root_window.after(1000, main)
+    
 # main ####
 raise_frame(home_frame)  # show the home frame on startup
+main()
 root_window.mainloop()
+
