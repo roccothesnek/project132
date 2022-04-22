@@ -28,6 +28,7 @@ def raise_frame(frame):
 # set the time when user confirms it
 def setTime():
     global ALARM_TIME
+    # if the meridiem is PM, add 12 hours
     if currentMeridiem.get() == "AM":
         ALARM_TIME = currentHour.get() + " " + currentMinute.get()
     else:
@@ -39,9 +40,11 @@ def setCredentials():
     global PASSWORD
     USERNAME = usernameBox.get("1.0", END)
     PASSWORD = passwordBox.get("1.0", END)
+    # clean up credentials
     USERNAME = USERNAME.strip()
     PASSWORD = PASSWORD.strip()
 
+# takes unfiltered assignment list, and filters them based of if the type of assignment
 def filterAssignments(assignments):
     filteredAssignments = []
     for assignment in assignments:
@@ -155,27 +158,37 @@ passwordBox = Text(control_frame, font = ("Calibri", 25))
 passwordBox.place(x = 545, y = 350, height = 40, width = 140)
 ####################################
 
+# the main operation
 def main():
     global ALARM_TIME
     global USERNAME
     global PASSWORD
+    # first see if an alarm has even been set
     if ALARM_TIME != None:
+        # get hour and minute separately
         hrMin = ALARM_TIME.split()
+        # see if the current time matches the set alarm time
         if int(hrMin[0]) == int(time.strftime("%H")) and int(hrMin[1]) == int(time.strftime("%M")):
+            # see if user even entered credentials, if so get the assignments
             if USERNAME != None and PASSWORD != None:
                 print("attempting to log in with " + USERNAME + ", " + PASSWORD)
                 scrape.moodleLogin(USERNAME, PASSWORD)
                 unfilteredAssignments = scrape.getMoodleAssignments()
                 filteredAssignments = filterAssignments(unfilteredAssignments)
-            assignments = ""
-            for assignment in filteredAssignments:
-                assignments += assignment + "\n"
-            assignmentsLabel.config(text = assignments)
-            print("ASSIGNMENTS: " + assignments)
+            # see if there are any upcoming assignments
+            if filteredAssignments != None:
+                assignments = ""
+                # create string of assignments
+                for assignment in filteredAssignments:
+                    assignments += assignment + "\n"
+                # display them
+                assignmentsLabel.config(text = assignments)
+                print("ASSIGNMENTS: " + assignments)
+            # reset alarm time
             ALARM_TIME = None
+    # recurse
     root_window.after(1000, main)
     
-# main ####
 raise_frame(home_frame)  # show the home frame on startup
 main()
 root_window.mainloop()
