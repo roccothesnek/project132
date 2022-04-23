@@ -15,6 +15,7 @@
 from tkinter import *
 import time
 import scrape
+import pyttsx3
 
 # user input
 ALARM_TIME = None
@@ -30,9 +31,19 @@ def setTime():
     global ALARM_TIME
     # if the meridiem is PM, add 12 hours
     if currentMeridiem.get() == "AM":
-        ALARM_TIME = currentHour.get() + " " + currentMinute.get()
+        if currentHour.get() != "12":
+            ALARM_TIME = currentHour.get() + " " + currentMinute.get()
+            svdTimeLabel.config(text = "Alarm Time: " + currentHour.get() + ":" + currentMinute.get() + " AM")
+        else:
+            ALARM_TIME = str(int(currentHour.get()) - 12) + " " + currentMinute.get()
+            svdTimeLabel.config(text = "Alarm Time: " + currentHour.get() + ":" + currentMinute.get() + " AM")
     else:
-        ALARM_TIME = str(int(currentHour.get()) + 12) + " " + currentMinute.get()
+        if currentHour.get() != "12":
+            ALARM_TIME = str(int(currentHour.get()) + 12) + " " + currentMinute.get()
+            svdTimeLabel.config(text = "Alarm Time: " + currentHour.get() + ":" + currentMinute.get() + " PM")
+        else:
+            ALARM_TIME = currentHour.get() + " " + currentMinute.get()
+            svdTimeLabel.config(text = "Alarm Time: " + currentHour.get() + ":" + currentMinute.get() + " PM")
 
 # set the credentials when the user confirms it
 def setCredentials():
@@ -54,6 +65,15 @@ def filterAssignments(assignments):
             else:
                 filteredAssignments.append(assignment["Event"] + " on " + assignment["Date"] + " in " + assignment["Class"])
     return filteredAssignments
+    
+# reads out assignments, must take filtered LIST of assignments
+def readDueAssignments(assignments):
+    for assignment in assignments:
+        engine.say(assignment)
+    engine.runAndWait()
+
+# initialize pyttsx3
+engine = pyttsx3.init()
 
 # define the root_window
 root_window = Tk()
@@ -83,7 +103,7 @@ home_frame.grid(row = 0, column = 0, sticky="nsew")
 # Adding widgets to the frames ####################
 ####### Home Frame Widgets #######
 # button that takes user to control_frame
-settingsPhoto = PhotoImage(file = 'C:/Users/jadyn/Desktop/New folder/project132/settings_icon.gif')
+settingsPhoto = PhotoImage(file = '/settings_icon.gif')
 settingsBn = Button(home_frame, image = settingsPhoto, command = lambda: raise_frame(control_frame))
 settingsBn.place(x = 0, y = 0, height = 40, width = 40)
 
@@ -92,34 +112,42 @@ readBn = Button(home_frame, text="Read")
 readBn.place(x = 500, y = 300, height = 40, width = 100)
 
 # Displays current time
-timeLabel = Label(home_frame, font = ("Calibri", 70, 'bold'), text = "09:38", bg = 'light gray')
-timeLabel.place(x = 250, y = 100, height = 100, width = 300)
+timeLabel = Label(home_frame, font = ("Calibri", 70, 'bold'), text = "12:38 PM", bg = 'light gray')
+timeLabel.place(x = 220, y = 100, height = 100, width = 360)
 def clockTime():
     textTime = time.strftime("%H:%M")
     hourTime = int(textTime[0:2])
     if hourTime > 12:
         hourTime -= 12
         hourTime = str(hourTime)
-        timeLabel.config(text = hourTime + textTime[2:len(textTime)])
+        timeLabel.config(text = hourTime + textTime[2:len(textTime)] + " PM")
+    elif hourTime == 0:
+        hourTime += 12
+        hourTime = str(hourTime)
+        timeLabel.config(text = hourTime + textTime[2:len(textTime)] + " AM")
     else:
-        timeLabel.config(text = textTime)
+        timeLabel.config(text = textTime + " AM")
     timeLabel.after(200, clockTime)
 clockTime()
 
 # Assignments Label
 assignmentsLabel = Label(home_frame, font = ("Calibri", 12), bg = 'light gray')
-assignmentsLabel.place(x = 50, y = 200, height = 200, width = 650)
+assignmentsLabel.place(x = 75 , y = 200, height = 300, width = 650)
 #####################################
 
 ####### Control Frame Widgets #######
 # takes user back to home_frame
-homePhoto = PhotoImage(file = 'C:/Users/jadyn/Desktop/New folder/project132/home_icon.gif')
+homePhoto = PhotoImage(file = '/home_icon.gif')
 homeBn = Button(control_frame, command=lambda: raise_frame(home_frame), image = homePhoto)
 homeBn.place(x = 0, y = 0, height = 40, width = 40)
 
 # sets the input for the time the user specified
 alarmSetBn = Button(control_frame, text = "Set Alarm", font = ("Calibri", 20), command = lambda: setTime())
 alarmSetBn.place(x = 300, y = 200, height = 50, width = 200)
+
+# lets user see saved time
+svdTimeLabel = Label(control_frame, text = "Alarm Time: None", font = ("Calibri", 35), bg = "light gray")
+svdTimeLabel.place(x =  150, y = 90, height = 50, width = 500)
 
 # lets user set the hour with a spin box
 hourLabel = Label(control_frame, text = "Hour:", font = ("Calibri", 25), bg = 'light gray')
@@ -132,7 +160,7 @@ hourSpin.place(x = 180, y = 150, height = 40, width = 80)
 minuteLabel = Label(control_frame, text = "Minute:", font = ("Calibri", 25), bg = 'light gray')
 minuteLabel.place(x = 280, y = 150, height = 40, width = 110)
 currentMinute = StringVar(value = 0)
-minuteSpin = Spinbox(control_frame, from_ = 0, to = 60, textvariable = currentMinute, wrap = True, font = ("Caibri", 25))
+minuteSpin = Spinbox(control_frame, from_ = 0, to = 59, textvariable = currentMinute, wrap = True, font = ("Caibri", 25))
 minuteSpin.place(x = 395, y = 150, height = 40, width = 80)
 
 # lets user set the meridiem with a dropdown box
@@ -148,6 +176,8 @@ loginSetBn = Button(control_frame, text = "Save Credentials", font = ("Calibri",
 loginSetBn.place(x = 300, y = 400, height = 50, width = 200)
 
 # lets the user enter their username and password into a text box
+credentialsLabel = Label(control_frame, text = "Moodle Credentials", font = ("Calibri", 35), bg = 'light gray')
+credentialsLabel.place(x = 150, y = 290, height = 50, width = 500)
 usernameLabel = Label(control_frame, text = "Username:", font = ("Calibri", 25), bg = 'light gray')
 usernameLabel.place(x = 100, y = 350, height = 40, width = 140)
 usernameBox = Text(control_frame, font = ("Calibri", 25))
@@ -175,21 +205,37 @@ def main():
                 scrape.moodleLogin(USERNAME, PASSWORD)
                 unfilteredAssignments = scrape.getMoodleAssignments()
                 filteredAssignments = filterAssignments(unfilteredAssignments)
-            # see if there are any upcoming assignments
-            if filteredAssignments != None:
-                assignments = ""
-                # create string of assignments
-                for assignment in filteredAssignments:
-                    assignments += assignment + "\n"
-                # display them
-                assignmentsLabel.config(text = assignments)
-                print("ASSIGNMENTS: " + assignments)
+                # see if there are any upcoming assignments
+                if filteredAssignments != None:
+                    assignments = ""
+                    # create string of assignments
+                    assignmentCount = 1
+                    for assignment in filteredAssignments:
+                        # spplices the assignment string based off length
+                        if len(assignment) < 90:
+                            assignments += str(assignmentCount) + ". " + assignment + "\n\n"
+                            assignmentCount += 1
+                        else:
+                            startingIndex = 70
+                            index = 0
+                            # looks for a space to start a new line
+                            for char in range(startingIndex, len(assignment)):
+                                if assignment[char] == " ":
+                                    assignments += str(assignmentCount) + ". " + assignment[0:startingIndex + index] + "\n" + assignment[startingIndex + index:len(assignment)] + "\n\n"
+                                    break
+                                index += 1
+                            assignmentCount += 1
+                        if assignmentCount == 6:
+                            break
+                    # display them
+                    assignmentsLabel.config(text = assignments)
+                    print("ASSIGNMENTS: " + assignments)
             # reset alarm time
             ALARM_TIME = None
+            svdTimeLabel.config(text = "Alarm Time: None")
     # recurse
     root_window.after(1000, main)
     
 raise_frame(home_frame)  # show the home frame on startup
 main()
 root_window.mainloop()
-
