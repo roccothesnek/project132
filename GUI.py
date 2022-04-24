@@ -1,21 +1,8 @@
-####################################################################
-# Description: Creates a tkinter window with a small control frame to the left and
-# a larger frame to the right. The larger frame will be used for various functions
-# such as setting an alarm, choosing days on a calendar, logging into Moodle, etc.
-# The smaller frame is always present and is composed of buttons to choose what
-# the main frame is displaying.
-###################################################################
-
-# ideas for improvement ############
-# - put icons on buttons
-# - make it so that the GUI covers the whole screen upon opening
-################################
-
-
 from tkinter import *
 import time
 import scrape
 import pyttsx3
+import threading
 
 # user input
 ALARM_TIME = None
@@ -66,14 +53,18 @@ def filterAssignments(assignments):
                 filteredAssignments.append(assignment["Event"] + " on " + assignment["Date"] + " in " + assignment["Class"])
     return filteredAssignments
     
-# reads out assignments, must take filtered LIST of assignments
+# reads out assignments, must take filtered STRING of assignments
 def readDueAssignments(assignments):
-    for assignment in assignments:
-        engine.say(assignment)
+    engine.say(assignments)
     engine.runAndWait()
+
+# simply clears the assignment label
+def clearAssignments():
+    assignmentsLabel.config(text = "")
 
 # initialize pyttsx3
 engine = pyttsx3.init()
+engine.setProperty('rate', 150)
 
 # define the root_window
 root_window = Tk()
@@ -83,10 +74,10 @@ root_window.geometry("800x500")
 # Divides the root window into two columns and a row.
 # The weight parameter controls the size of the rows/columns by forming a ratio
 # with the weight parameters for the other rows/columns.
-root_window.rowconfigure(0, weight=1)
+root_window.rowconfigure(0, weight = 1)
 # adjusting the weights of the next two methods will change the control frame (side
 # button) width
-root_window.columnconfigure(0, weight=1)
+root_window.columnconfigure(0, weight = 1)
 
 # Putting frames into the root window ###############
 # control_frame is the frame that leds the user configure the alarm settings
@@ -95,8 +86,8 @@ control_frame = Frame(root_window, bg = 'light gray')
 home_frame = Frame(root_window, bg = 'light gray')
 
 # render each frame
-control_frame.grid(row = 0, column = 0, sticky="nsew")
-home_frame.grid(row = 0, column = 0, sticky="nsew")
+control_frame.grid(row = 0, column = 0, sticky = "nsew")
+home_frame.grid(row = 0, column = 0, sticky = "nsew")
 ##############################################
 
 
@@ -107,13 +98,14 @@ settingsPhoto = PhotoImage(file = '/settings_icon.gif')
 settingsBn = Button(home_frame, image = settingsPhoto, command = lambda: raise_frame(control_frame))
 settingsBn.place(x = 0, y = 0, height = 40, width = 40)
 
-# read button
-readBn = Button(home_frame, text="Read")
-readBn.place(x = 500, y = 300, height = 40, width = 100)
+# clear button
+clearAssignmentsBn = Button(home_frame, text="Clear Assignments", font = ("Calibri", 15), command = lambda: clearAssignments())
+clearAssignmentsBn.place(x = 620, y = 0, height = 40, width = 180)
 
 # Displays current time
 timeLabel = Label(home_frame, font = ("Calibri", 70, 'bold'), text = "12:38 PM", bg = 'light gray')
 timeLabel.place(x = 220, y = 100, height = 100, width = 360)
+# sets clock label to correct time
 def clockTime():
     textTime = time.strftime("%H:%M")
     hourTime = int(textTime[0:2])
@@ -131,7 +123,7 @@ def clockTime():
 clockTime()
 
 # Assignments Label
-assignmentsLabel = Label(home_frame, font = ("Calibri", 12), bg = 'light gray')
+assignmentsLabel = Label(home_frame, font = ("Calibri", 13), bg = 'light gray')
 assignmentsLabel.place(x = 75 , y = 200, height = 300, width = 650)
 #####################################
 
@@ -229,6 +221,13 @@ def main():
                             break
                     # display them
                     assignmentsLabel.config(text = assignments)
+                    # create a single readable string of assignments
+                    readAssignmentString = "Hello, your upcoming assignments are: "
+                    for assignment in filteredAssignments:
+                        readAssignmentString += assignment
+                    # create and execute new thread so the GUI doesn't stop responding
+                    ttsThread = threading.Thread(target = readDueAssignments, args = (readAssignmentString,))
+                    ttsThread.start()
                     print("ASSIGNMENTS: " + assignments)
             # reset alarm time
             ALARM_TIME = None
