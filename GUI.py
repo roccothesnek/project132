@@ -94,7 +94,7 @@ home_frame.grid(row = 0, column = 0, sticky = "nsew")
 # Adding widgets to the frames ####################
 ####### Home Frame Widgets #######
 # button that takes user to control_frame
-settingsPhoto = PhotoImage(file = '/settings_icon.gif')
+settingsPhoto = PhotoImage(file = 'settings_icon.gif')
 settingsBn = Button(home_frame, image = settingsPhoto, command = lambda: raise_frame(control_frame))
 settingsBn.place(x = 0, y = 0, height = 40, width = 40)
 
@@ -129,7 +129,7 @@ assignmentsLabel.place(x = 75 , y = 200, height = 300, width = 650)
 
 ####### Control Frame Widgets #######
 # takes user back to home_frame
-homePhoto = PhotoImage(file = '/home_icon.gif')
+homePhoto = PhotoImage(file = 'home_icon.gif')
 homeBn = Button(control_frame, command=lambda: raise_frame(home_frame), image = homePhoto)
 homeBn.place(x = 0, y = 0, height = 40, width = 40)
 
