@@ -41,7 +41,7 @@ def setCredentials():
     global USERNAME
     global PASSWORD
     USERNAME = usernameBox.get("1.0", END)
-    PASSWORD = passwordBox.get("1.0", END)
+    PASSWORD = passwordBox.get()
     # clean up credentials
     USERNAME = USERNAME.strip()
     PASSWORD = PASSWORD.strip()
@@ -67,14 +67,30 @@ def readDueAssignments(assignments):
     engine.runAndWait()
 
 
+# puts the 'show assignments' button on top
+def raise_show_assignment_button():
+    displayAssignmentsBn.place(x=760, y=0, height=40, width=40)
+    clearAssignmentsBn.place_forget()
+
+
+# puts the 'hide assignments' button on top
+def raise_clear_assignments_button():
+    clearAssignmentsBn.place(x=760, y=0, height=40, width=40)
+    displayAssignmentsBn.place_forget()
+
+
 # simply clears the assignment label
 def clearAssignments():
+    # display the button to show the assignments again
+    raise_show_assignment_button()
     assignmentsLabel.config(text="")
 
 
 # gets and displays the moodle assignments
 # also hides the buttons used to turn off the alarm
 def display_and_read_assignments():
+    # place button to clear assignments
+    raise_clear_assignments_button()
     # hide the buttons used to turn off the alarm
     stopAlarmBn1.place_forget()
     stopAlarmBn2.place_forget()
@@ -124,6 +140,8 @@ def display_and_read_assignments():
 # displays the assignments without reading them and hides the buttons used to turn
 # off the alarm
 def display_assignments():
+    # place button to clear assignments
+    raise_clear_assignments_button()
     # hide the buttons used to turn off the alarm
     stopAlarmBn1.place_forget()
     stopAlarmBn2.place_forget()
@@ -199,14 +217,27 @@ settingsPhoto = PhotoImage(file='settings_icon.gif')
 settingsBn = Button(home_frame, image=settingsPhoto, command=lambda: raise_frame(control_frame))
 settingsBn.place(x=0, y=0, height=40, width=40)
 
+# display assignments button
+displayAssignmentsPhoto = PhotoImage(file='show_icon.gif')
+displayAssignmentsBn = Button(home_frame, text="Clear Assignments", image=displayAssignmentsPhoto,
+                            command=lambda: display_assignments())
+displayAssignmentsBn.place(x=760, y=0, height=40, width=40)
+
 # clear button
-clearAssignmentsBn = Button(home_frame, text="Clear Assignments", font=("Calibri", 15),
+clearAssignmentsPhoto = PhotoImage(file='clear_icon.gif')
+clearAssignmentsBn = Button(home_frame, image=clearAssignmentsPhoto,
                             command=lambda: clearAssignments())
-clearAssignmentsBn.place(x=620, y=0, height=40, width=180)
 
 # Displays current time
 timeLabel = Label(home_frame, font=("Calibri", 70, 'bold'), text="12:38 PM", bg='light gray')
 timeLabel.place(x=220, y=100, height=100, width=360)
+
+# button to display and read assignments
+readAssignmentsPhoto = PhotoImage(file='play_icon.gif')
+readAssignmentsBn = Button(home_frame,
+                           image=readAssignmentsPhoto,
+                           command=lambda: display_and_read_assignments())
+readAssignmentsBn.place(x=760, y=40, height=40, width=40)
 
 
 # sets clock label to correct time
@@ -292,7 +323,7 @@ usernameBox = Text(control_frame, font=("Calibri", 25))
 usernameBox.place(x=245, y=350, height=40, width=140)
 passwordLabel = Label(control_frame, text="Password:", font=("Calibri", 25), bg='light gray')
 passwordLabel.place(x=400, y=350, height=40, width=140)
-passwordBox = Text(control_frame, font=("Calibri", 25))
+passwordBox = Entry(control_frame, font=("Calibri", 25), show="*")
 passwordBox.place(x=545, y=350, height=40, width=140)
 
 
