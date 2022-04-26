@@ -192,7 +192,7 @@ home_frame.grid(row = 0, column = 0, sticky = "nsew")
 # button that takes user to control_frame
 settingsPhoto = PhotoImage(file = 'settings_icon.gif')
 settingsBn = Button(home_frame, image = settingsPhoto, command = lambda: raise_frame(control_frame), bd = BORDERWIDTH)
-settingsBn.place(x = 0, y = 0, height = 40, width = 40)
+settingsBn.place(x = 0, y = 0, height = 60, width = 60)
 
 # Displays current time
 timeLabel = Label(home_frame, fg = TEXT_COLOR, font=(FONT, 70, 'bold'), text = "12:38 PM", bg = BACKGROUND_COLOR)
@@ -202,19 +202,19 @@ timeLabel.place(x = 220, y = 100, height = 100, width = 360)
 readAssignmentsPhoto = PhotoImage(file='play_icon.gif')
 readAssignmentsBn = Button(home_frame,
                            image=readAssignmentsPhoto,
-                           command=lambda: displayAssignments(True))
+                           command=lambda: displayAssignments(True), bd = BORDERWIDTH)
 readAssignmentsBn.place(x=760, y=40, height=40, width=40)
 
 # display assignments button
 displayAssignmentsPhoto = PhotoImage(file='show_icon.gif')
 displayAssignmentsBn = Button(home_frame, text="Clear Assignments", image=displayAssignmentsPhoto,
-                            command=lambda: displayAssignments(False))
+                            command=lambda: displayAssignments(False), bd = BORDERWIDTH)
 displayAssignmentsBn.place(x=760, y=0, height=40, width=40)
 
 # clear button
 clearAssignmentsPhoto = PhotoImage(file='clear_icon.gif')
 clearAssignmentsBn = Button(home_frame, image=clearAssignmentsPhoto,
-                            command=lambda: clearAssignments())
+                            command=lambda: clearAssignments(), bd = BORDERWIDTH)
 
 # sets clock label to correct time
 clockTime()
@@ -238,7 +238,7 @@ stopAlarmBn2 = Button(home_frame, text = "Display and Read Assignments",
 # takes user back to home_frame
 homePhoto = PhotoImage(file='home_icon.gif')
 homeBn = Button(control_frame, command = lambda: raise_frame(home_frame), image = homePhoto, bd = BORDERWIDTH)
-homeBn.place(x = 0, y = 0, height = 40, width = 40)
+homeBn.place(x = 0, y = 0, height = 60, width = 60)
 
 # sets the input for the time the user specified
 alarmSetBn = Button(control_frame, bg = BUTTON_COLOR, fg = TEXT_COLOR, text = "Set Alarm", font = (FONT, 20), command = lambda: setTime(), bd = BORDERWIDTH)
