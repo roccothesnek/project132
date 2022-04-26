@@ -234,12 +234,12 @@ assignmentsLabel.place(x=75, y=200, height=300, width=650)
 
 # Button to turn off alarm and only display assignments
 stopAlarmBn1 = Button(home_frame, text="Only Display Assignments",
-                      font=("Calibri", 15), bg='orange',
+                      font=("Calibri", 15), bg='#90EE90',
                       command=lambda: [alarm.stop_alarm(), display_assignments()])
 
 # Button to turn off alarm and both display and read assignments
 stopAlarmBn2 = Button(home_frame, text="Display and Read Assignments",
-                      font=("Calibri", 15), bg='orange',
+                      font=("Calibri", 15), bg='#90EE90',
                       command=lambda: [alarm.stop_alarm(), display_and_read_assignments()])
 #####################################
 
@@ -308,7 +308,7 @@ def main():
         # get hour and minute separately
         hrMin = ALARM_TIME.split()
         # see if the current time matches the set alarm time
-        if True: #int(hrMin[0]) == int(time.strftime("%H")) and int(hrMin[1]) == int(time.strftime("%M")):
+        if int(hrMin[0]) == int(time.strftime("%H")) and int(hrMin[1]) == int(time.strftime("%M")):
             # sound the alarm
             alarm.play_alarm('wakeup_chill_alarm.mp3')
             # display the buttons to stop the alarm
