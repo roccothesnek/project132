@@ -93,9 +93,9 @@ def displayAssignments(readAssignments):
         print("attempting to log in with " + USERNAME + ", " + PASSWORD)
         scrape.moodleLogin(USERNAME, PASSWORD)
         unfilteredAssignments = scrape.getMoodleAssignments()
-        filteredAssignments = filterAssignments(unfilteredAssignments)
         # see if there are any upcoming assignments
-        if filteredAssignments != None:
+        if unfilteredAssignments != None:
+            filteredAssignments = filterAssignments(unfilteredAssignments)
             assignments = ""
             # create string of assignments
             assignmentCount = 1
@@ -252,14 +252,14 @@ svdTimeLabel.place(x = 150, y = 90, height = 50, width = 500)
 hourLabel = Label(control_frame, fg = TEXT_COLOR, text = "Hour:", font = (FONT, 25), bg = BACKGROUND_COLOR)
 hourLabel.place(x = 100, y = 150, height = 40, width = 75)
 currentHour = StringVar(value = 1)
-hourSpin = Spinbox(control_frame, from_ = 1, to = 12, textvariable = currentHour, wrap = True, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), buttonbackground = BUTTON_COLOR)
+hourSpin = Spinbox(control_frame, from_ = 1, to = 12, textvariable = currentHour, wrap = True, readonlybackground = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), buttonbackground = BUTTON_COLOR, state = 'readonly')
 hourSpin.place(x = 180, y = 150, height = 40, width = 80)
 
 # lets user set the minute with a spin box
 minuteLabel = Label(control_frame, text = "Minute:", font = (FONT, 25), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
 minuteLabel.place(x = 280, y = 150, height = 40, width = 110)
 currentMinute = StringVar(value = 0)
-minuteSpin = Spinbox(control_frame, from_ = 0, to = 59, textvariable = currentMinute, wrap = True, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), buttonbackground = BUTTON_COLOR, buttondownrelief = 'flat', buttonuprelief = 'flat')
+minuteSpin = Spinbox(control_frame, from_ = 0, to = 59, textvariable = currentMinute, wrap = True, state = 'readonly', readonlybackground = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), buttonbackground = BUTTON_COLOR)
 minuteSpin.place(x = 395, y = 150, height = 40, width = 80)
 
 # lets user set the meridiem with a dropdown box
