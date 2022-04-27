@@ -180,10 +180,12 @@ root_window.columnconfigure(0, weight = 1)
 control_frame = Frame(root_window, bg = BACKGROUND_COLOR)
 # home_frame is the home frame
 home_frame = Frame(root_window, bg = BACKGROUND_COLOR)
-
+# speak frame
+speak_frame = Frame(root_window, bg = BACKGROUND_COLOR)
 # render each frame
 control_frame.grid(row = 0, column = 0, sticky = "nsew")
 home_frame.grid(row = 0, column = 0, sticky = "nsew")
+speak_frame.grid(row = 0, column = 0, sticky = "nsew")
 ##############################################
 
 
@@ -233,6 +235,11 @@ stopAlarmBn2 = Button(home_frame, text = "Display and Read Assignments",
                       font = (FONT, 15), fg = TEXT_COLOR, bg = BUTTON_COLOR,
                       command = lambda: [alarm.stop_alarm(), displayAssignments(True)])
 #####################################
+
+# button to show speak frame
+speakBn = Button(home_frame, text = "Speak", font = (FONT, 15), fg = TEXT_COLOR, bg = BUTTON_COLOR,
+                    command = lambda: raise_frame(speak_frame))
+speakBn.place(x = 735, y = 450, height = 60, width = 60)
 
 ####### Control Frame Widgets #######
 # takes user back to home_frame
@@ -288,7 +295,50 @@ passwordLabel.place(x = 400, y = 300, height = 40, width = 140)
 passwordBox = Entry(control_frame, show = "*", font = (FONT, 25), bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH)
 passwordBox.place(x = 545, y = 300, height = 40, width = 140)
 
+## speak frame
+volumeL = Label(speak_frame, text = "Volume:", font = (FONT, 35), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
+volumeL.place(x = 200, y = 80, height = 60, width = 180)
 
+# function to set the volume of the pyttsx3 engine
+def setVolume(x):
+    volume = x
+    volume = int(volume)
+    volume = volume / 100
+    engine.setProperty('volume', volume)
+# adds a slider to adjust the volume
+volumeS = Scale(speak_frame, from_ = 0, to = 100, orient = HORIZONTAL, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), length = 200, command = lambda x: setVolume(x))
+volumeS.place(x =380, y = 80, height = 60, width = 150)
+
+# rate label
+rateL = Label(speak_frame, text = "Rate:", font = (FONT, 35), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
+rateL.place(x = 260, y = 200, height = 60, width = 120)
+
+# function to set rate of the pyttsx3 engine
+def setRate(x):
+    rate = x
+    rate = int(rate)
+    rate = rate / 100
+    engine.setProperty('rate', rate)
+# adds a slider to adjust the rate
+rateS = Scale(speak_frame, from_ = 0, to = 100, orient = HORIZONTAL, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), length = 200, command = lambda x: setRate(x))
+rateS.place(x =380, y = 200, height = 60, width = 150)
+
+homeBnSpk = Button(speak_frame, image = homePhoto, bg = BUTTON_COLOR, bd = BORDERWIDTH, command = lambda: raise_frame(home_frame))
+homeBnSpk.place(x = 0, y = 0, height = 60, width = 60)
+
+# pick alarm sounds from dropdown menu
+alarmSoundLabel = Label(speak_frame, text = "Alarm Sound:", font = (FONT, 25), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
+alarmSoundLabel.place(x = 200, y = 300, height = 40, width = 180)
+
+alarmSoundOptions = ["Samsung.mp3", "Doom.mp3", "Nujabes.m4a"]
+currentAlarmSound = StringVar(value = "Samsung.mp3")
+
+alarmSoundDropDown = OptionMenu(speak_frame, currentAlarmSound, *alarmSoundOptions)
+alarmSoundDropDown.config(bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, activebackground = BUTTON_COLOR)
+alarmSoundDropDown["menu"].config(bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, activebackground = BUTTON_COLOR)
+alarmSoundDropDown.place(x = 400, y = 300, height = 40, width = 140)
+
+AlarmSound = currentAlarmSound
 ####################################
 
 # the main operation
@@ -306,7 +356,7 @@ def main():
             clearAssignments()
             raise_frame(home_frame)
             # sound the alarm
-            alarm.play_alarm('wakeup_chill_alarm.mp3')
+            alarm.play_alarm(AlarmSound)
             # display the buttons to stop the alarm
             stopAlarmBn1.place(x = 75, y = 180, height = 200, width = 325)
             stopAlarmBn2.place(x = 400, y = 180, height = 200, width = 325)
