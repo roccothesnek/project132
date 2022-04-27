@@ -196,7 +196,7 @@ settingsBn.place(x = 0, y = 0, height = 60, width = 60)
 
 # Displays current time
 timeLabel = Label(home_frame, fg = TEXT_COLOR, font=(FONT, 70, 'bold'), text = "12:38 PM", bg = BACKGROUND_COLOR)
-timeLabel.place(x = 220, y = 100, height = 100, width = 360)
+timeLabel.place(x = 220, y = 50, height = 100, width = 360)
 
 # button to display and read assignments
 readAssignmentsPhoto = PhotoImage(file='play_icon.gif')
@@ -221,7 +221,7 @@ clockTime()
 
 # Assignments Label
 assignmentsLabel = Label(home_frame, font = (FONT, 13), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
-assignmentsLabel.place(x = 75, y = 200, height = 300, width = 650)
+assignmentsLabel.place(x = 75, y = 150, height = 300, width = 650)
 
 # Button to turn off alarm and only display assignments
 stopAlarmBn1 = Button(home_frame, text = "Only Display Assignments",
@@ -242,51 +242,51 @@ homeBn.place(x = 0, y = 0, height = 60, width = 60)
 
 # sets the input for the time the user specified
 alarmSetBn = Button(control_frame, bg = BUTTON_COLOR, fg = TEXT_COLOR, text = "Set Alarm", font = (FONT, 20), command = lambda: setTime(), bd = BORDERWIDTH)
-alarmSetBn.place(x = 300, y = 200, height = 50, width = 200)
+alarmSetBn.place(x = 300, y = 150, height = 50, width = 200)
 
 # lets user see saved time
 svdTimeLabel = Label(control_frame, fg = TEXT_COLOR, text = "Alarm Time: None", font = (FONT, 35), bg = BACKGROUND_COLOR)
-svdTimeLabel.place(x = 150, y = 90, height = 50, width = 500)
+svdTimeLabel.place(x = 150, y = 40, height = 50, width = 500)
 
 # lets user set the hour with a spin box
 hourLabel = Label(control_frame, fg = TEXT_COLOR, text = "Hour:", font = (FONT, 25), bg = BACKGROUND_COLOR)
-hourLabel.place(x = 100, y = 150, height = 40, width = 75)
+hourLabel.place(x = 100, y = 100, height = 40, width = 75)
 currentHour = StringVar(value = 1)
 hourSpin = Spinbox(control_frame, from_ = 1, to = 12, textvariable = currentHour, wrap = True, readonlybackground = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), buttonbackground = BUTTON_COLOR, state = 'readonly')
-hourSpin.place(x = 180, y = 150, height = 40, width = 80)
+hourSpin.place(x = 180, y = 100, height = 40, width = 80)
 
 # lets user set the minute with a spin box
 minuteLabel = Label(control_frame, text = "Minute:", font = (FONT, 25), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
-minuteLabel.place(x = 280, y = 150, height = 40, width = 110)
+minuteLabel.place(x = 280, y = 100, height = 40, width = 110)
 currentMinute = StringVar(value = 0)
 minuteSpin = Spinbox(control_frame, from_ = 0, to = 59, textvariable = currentMinute, wrap = True, state = 'readonly', readonlybackground = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), buttonbackground = BUTTON_COLOR)
-minuteSpin.place(x = 395, y = 150, height = 40, width = 80)
+minuteSpin.place(x = 395, y = 100, height = 40, width = 80)
 
 # lets user set the meridiem with a dropdown box
 meridiemLabel = Label(control_frame, text = "Meridiem:", font = (FONT, 25), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
-meridiemLabel.place(x = 500, y = 150, height = 40, width = 140)
+meridiemLabel.place(x = 500, y = 100, height = 40, width = 140)
 meridiemOptions = ["AM", "PM"]
 currentMeridiem = StringVar(value = "AM")
 meridiemDropDown = OptionMenu(control_frame, currentMeridiem, *meridiemOptions)
 meridiemDropDown.config(bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, activebackground = BUTTON_COLOR, activeforeground = TEXT_COLOR)
 meridiemDropDown["menu"].config(bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, activebackground = BUTTON_COLOR)
-meridiemDropDown.place(x = 645, y = 150, height = 40, width = 75)
+meridiemDropDown.place(x = 645, y = 100, height = 40, width = 75)
 
 # sets the input for the credentials the user specified
 loginSetBn = Button(control_frame, text = "Save Credentials", font = (FONT, 20), bg = BUTTON_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, command = lambda: setCredentials())
-loginSetBn.place(x = 300, y = 400, height = 50, width = 200)
+loginSetBn.place(x = 300, y = 350, height = 50, width = 200)
 
 # lets the user enter their username and password into a text box
 credentialsLabel = Label(control_frame, text = "Moodle Credentials", font = (FONT, 35), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
-credentialsLabel.place(x = 150, y = 290, height = 50, width = 500)
+credentialsLabel.place(x = 150, y = 240, height = 50, width = 500)
 usernameLabel = Label(control_frame, text = "Username:", font = (FONT, 25), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
-usernameLabel.place(x = 100, y = 350, height = 40, width = 140)
+usernameLabel.place(x = 100, y = 300, height = 40, width = 140)
 usernameBox = Entry(control_frame, fg = TEXT_COLOR, bg = FIELD_COLOR, font = (FONT, 25), bd = BORDERWIDTH)
-usernameBox.place(x = 245, y = 350, height = 40, width = 140)
+usernameBox.place(x = 245, y = 300, height = 40, width = 140)
 passwordLabel = Label(control_frame, text = "Password:", fg = TEXT_COLOR, bg = BACKGROUND_COLOR, font = (FONT, 25))
-passwordLabel.place(x = 400, y = 350, height = 40, width = 140)
+passwordLabel.place(x = 400, y = 300, height = 40, width = 140)
 passwordBox = Entry(control_frame, show = "*", font = (FONT, 25), bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH)
-passwordBox.place(x = 545, y = 350, height = 40, width = 140)
+passwordBox.place(x = 545, y = 300, height = 40, width = 140)
 
 
 ####################################
@@ -308,8 +308,8 @@ def main():
             # sound the alarm
             alarm.play_alarm('wakeup_chill_alarm.mp3')
             # display the buttons to stop the alarm
-            stopAlarmBn1.place(x = 75, y = 230, height = 200, width = 325)
-            stopAlarmBn2.place(x = 400, y = 230, height = 200, width = 325)
+            stopAlarmBn1.place(x = 75, y = 180, height = 200, width = 325)
+            stopAlarmBn2.place(x = 400, y = 180, height = 200, width = 325)
             # reset alarm time
             ALARM_TIME = None
             svdTimeLabel.config(text = "Alarm Time: None")
