@@ -47,7 +47,9 @@ def setCredentials():
 # takes unfiltered assignment list, and filters them based of if the type of assignment
 def filterAssignments(assignments):
     filteredAssignments = []
+    assignmentCount = 0
     for assignment in assignments:
+        assignmentCount += 1
         if (assignment["Event"].endswith("closes") or assignment["Event"].endswith("is due")):
             if "Tomorrow" in assignment["Date"]:
                 filteredAssignments.append(
@@ -55,14 +57,22 @@ def filterAssignments(assignments):
             else:
                 filteredAssignments.append(
                     assignment["Event"] + " on " + assignment["Date"] + " in " + assignment["Class"])
+        if assignmentCount == 6:
+            break
     return filteredAssignments
 
 
 # reads out assignments, must take filtered STRING of assignments
 def readDueAssignments(assignments):
+    # disable sliders so they dont interfere with voice
+    volumeS.config(state = 'disabled')
+    rateS.config(state = 'disabled')
     print(assignments)
     engine.say(assignments)
     engine.runAndWait()
+    # enable sliders again
+    volumeS.config(state = 'normal')
+    rateS.config(state = 'normal')
     
 # puts the 'show assignments' button on top
 def raise_show_assignment_button():
@@ -208,7 +218,7 @@ readAssignmentsBn = Button(home_frame,
 readAssignmentsBn.place(x=760, y=40, height=40, width=40)
 
 # display assignments button
-displayAssignmentsPhoto = PhotoImage(file='show_icon.gif')
+displayAssignmentsPhoto = PhotoImage(file= 'show_icon.gif')
 displayAssignmentsBn = Button(home_frame, text="Clear Assignments", image=displayAssignmentsPhoto,
                             command=lambda: displayAssignments(False), bd = BORDERWIDTH)
 displayAssignmentsBn.place(x=760, y=0, height=40, width=40)
@@ -236,16 +246,16 @@ stopAlarmBn2 = Button(home_frame, text = "Display and Read Assignments",
                       command = lambda: [alarm.stop_alarm(), displayAssignments(True)])
 #####################################
 
-# button to show speak frame
-speakBn = Button(home_frame, text = "Speak", font = (FONT, 15), fg = TEXT_COLOR, bg = BUTTON_COLOR,
-                    command = lambda: raise_frame(speak_frame))
-speakBn.place(x = 735, y = 450, height = 60, width = 60)
-
 ####### Control Frame Widgets #######
 # takes user back to home_frame
 homePhoto = PhotoImage(file='home_icon.gif')
 homeBn = Button(control_frame, command = lambda: raise_frame(home_frame), image = homePhoto, bd = BORDERWIDTH)
 homeBn.place(x = 0, y = 0, height = 60, width = 60)
+
+# button to show speak frame
+speakBn = Button(control_frame, text = "Sound Settings", font = (FONT, 18), fg = TEXT_COLOR, bg = BUTTON_COLOR,
+                    command = lambda: raise_frame(speak_frame))
+speakBn.place(x = 600, y = 0, height = 40, width = 200)
 
 # sets the input for the time the user specified
 alarmSetBn = Button(control_frame, bg = BUTTON_COLOR, fg = TEXT_COLOR, text = "Set Alarm", font = (FONT, 20), command = lambda: setTime(), bd = BORDERWIDTH)
@@ -300,11 +310,13 @@ volumeL = Label(speak_frame, text = "Volume:", font = (FONT, 35), fg = TEXT_COLO
 volumeL.place(x = 200, y = 80, height = 60, width = 180)
 
 # function to set the volume of the pyttsx3 engine
-def setVolume(x):
-    volume = x
+def setVolume(volume):
     volume = int(volume)
     volume = volume / 100
+    print(volume)
     engine.setProperty('volume', volume)
+    engine.runAndWait()
+    
 # adds a slider to adjust the volume
 volumeS = Scale(speak_frame, from_ = 0, to = 100, orient = HORIZONTAL, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), length = 200, command = lambda x: setVolume(x))
 volumeS.place(x =380, y = 80, height = 60, width = 150)
@@ -314,31 +326,30 @@ rateL = Label(speak_frame, text = "Rate:", font = (FONT, 35), fg = TEXT_COLOR, b
 rateL.place(x = 260, y = 200, height = 60, width = 120)
 
 # function to set rate of the pyttsx3 engine
-def setRate(x):
-    rate = x
+def setRate(rate):
     rate = int(rate)
-    rate = rate / 100
+    rate = rate
     engine.setProperty('rate', rate)
+    engine.runAndWait()
+    
 # adds a slider to adjust the rate
-rateS = Scale(speak_frame, from_ = 0, to = 100, orient = HORIZONTAL, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), length = 200, command = lambda x: setRate(x))
-rateS.place(x =380, y = 200, height = 60, width = 150)
+rateS = Scale(speak_frame, from_ = 0, to = 200, orient = HORIZONTAL, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), length = 200, command = lambda x: setRate(x))
+rateS.place(x = 380, y = 200, height = 60, width = 150)
 
 homeBnSpk = Button(speak_frame, image = homePhoto, bg = BUTTON_COLOR, bd = BORDERWIDTH, command = lambda: raise_frame(home_frame))
 homeBnSpk.place(x = 0, y = 0, height = 60, width = 60)
 
 # pick alarm sounds from dropdown menu
 alarmSoundLabel = Label(speak_frame, text = "Alarm Sound:", font = (FONT, 25), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
-alarmSoundLabel.place(x = 200, y = 300, height = 40, width = 180)
+alarmSoundLabel.place(x = 200, y = 320, height = 40, width = 180)
 
-alarmSoundOptions = ["Samsung.mp3", "Doom.mp3", "Nujabes.m4a"]
+alarmSoundOptions = ["Samsung.mp3", "Doom.mp3", "Nujabes.m4a", "wakeup_chill_alarm.mp3"]
 currentAlarmSound = StringVar(value = "Samsung.mp3")
 
 alarmSoundDropDown = OptionMenu(speak_frame, currentAlarmSound, *alarmSoundOptions)
 alarmSoundDropDown.config(bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, activebackground = BUTTON_COLOR)
 alarmSoundDropDown["menu"].config(bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, activebackground = BUTTON_COLOR)
-alarmSoundDropDown.place(x = 400, y = 300, height = 40, width = 140)
-
-AlarmSound = currentAlarmSound
+alarmSoundDropDown.place(x = 400, y = 320, height = 40, width = 140)
 ####################################
 
 # the main operation
@@ -355,6 +366,7 @@ def main():
         if int(hrMin[0]) == int(time.strftime("%H")) and int(hrMin[1]) == int(time.strftime("%M")):
             clearAssignments()
             raise_frame(home_frame)
+            AlarmSound = currentAlarmSound.get()
             # sound the alarm
             alarm.play_alarm(AlarmSound)
             # display the buttons to stop the alarm
