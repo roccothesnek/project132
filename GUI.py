@@ -232,7 +232,7 @@ clearAssignmentsBn = Button(home_frame, image=clearAssignmentsPhoto,
 clockTime()
 
 # Assignments Label
-assignmentsLabel = Label(home_frame, font = (FONT, 13), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
+assignmentsLabel = Label(home_frame, text = 'Loading, Please Wait', font = (FONT, 13), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
 assignmentsLabel.place(x = 75, y = 150, height = 300, width = 650)
 
 # Button to turn off alarm and only display assignments
@@ -322,8 +322,17 @@ volumeS = Scale(speak_frame, from_ = 0, to = 100, orient = HORIZONTAL, bg = FIEL
 volumeS.place(x =380, y = 80, height = 60, width = 150)
 
 # rate label
-rateL = Label(speak_frame, text = "Rate:", font = (FONT, 35), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
-rateL.place(x = 260, y = 200, height = 60, width = 120)
+rateL = Label(speak_frame, text = "Rate of Speech:", font = (FONT, 35), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
+rateL.place(x = 90, y = 200, height = 60, width = 300)
+
+rateLFast = Label(speak_frame, text = "Fast", font = (FONT, 12), fg = TEXT_COLOR, bg = BACKGROUND_COLOR) 
+rateLFast.place(x = 490, y = 200, height = 20, width = 100)
+
+rateLNormal = Label(speak_frame, text = " Normal", font = (FONT, 12), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
+rateLNormal.place(x = 420, y = 200, height = 20, width = 100)
+
+rateLSlow = Label(speak_frame, text = " Slow", font = (FONT, 12), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
+rateLSlow.place(x = 380, y = 200, height = 20, width = 70)
 
 # function to set rate of the pyttsx3 engine
 def setRate(rate):
@@ -333,11 +342,14 @@ def setRate(rate):
     engine.runAndWait()
     
 # adds a slider to adjust the rate
-rateS = Scale(speak_frame, from_ = 0, to = 200, orient = HORIZONTAL, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), length = 200, command = lambda x: setRate(x))
-rateS.place(x = 380, y = 200, height = 60, width = 150)
+rateS = Scale(speak_frame, from_ = 0, to = 200, orient = HORIZONTAL, showvalue = 0, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), length = 200, command = lambda x: setRate(x))
+rateS.place(x = 400, y = 220, height = 20, width = 150)
 
 homeBnSpk = Button(speak_frame, image = homePhoto, bg = BUTTON_COLOR, bd = BORDERWIDTH, command = lambda: raise_frame(home_frame))
 homeBnSpk.place(x = 0, y = 0, height = 60, width = 60)
+
+settingsBnSpk = Button(speak_frame, image = settingsPhoto, bg = BUTTON_COLOR, bd = BORDERWIDTH, command = lambda: raise_frame(control_frame))
+settingsBnSpk.place(x = 735, y = 0, height = 60, width = 60)
 
 # pick alarm sounds from dropdown menu
 alarmSoundLabel = Label(speak_frame, text = "Alarm Sound:", font = (FONT, 25), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
