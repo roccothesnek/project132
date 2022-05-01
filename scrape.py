@@ -27,9 +27,15 @@ def moodleLogin(username, password):
         loginData['execution'] = soup.find('input', attrs={'name': 'execution'})['value']
         # send post request to log in
         r = SESSION.post(url, data = loginData)
-    # if SESSION is already logged in, return -1
+        soup = BeautifulSoup(r.content, 'html5lib')
+        # return 1 if the login was successful, -1 if unsuccessful
+        if soup.find('form', id = 'fm1') != None:
+            return -1
+        else:
+            return 1
+    # if SESSION is already logged in, return 1
     else:
-        return -1
+        return 1
     
 def getMoodleAssignments():
     ''' Once session is logged in, this will pull every event (unfiltered) and return a list of dictionaries for each event '''

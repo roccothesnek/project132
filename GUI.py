@@ -430,3 +430,4 @@ def main():
 raise_frame(home_frame)  # show the home frame on startup
 main()
 root_window.mainloop()
+
