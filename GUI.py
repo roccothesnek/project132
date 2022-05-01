@@ -98,45 +98,54 @@ def displayAssignments(readAssignments):
     # hide the buttons used to turn off the alarm
     stopAlarmBn1.place_forget()
     stopAlarmBn2.place_forget()
+    # show that the label is updating
+    assignmentsLabel.config(text = 'Loading...')
+    assignmentsLabel.update()
     # see if user even entered credentials, if so get the assignments
     if USERNAME != None and PASSWORD != None:
         print("attempting to log in with " + USERNAME + ", " + PASSWORD)
-        scrape.moodleLogin(USERNAME, PASSWORD)
-        unfilteredAssignments = scrape.getMoodleAssignments()
-        # see if there are any upcoming assignments
-        if unfilteredAssignments != None:
-            filteredAssignments = filterAssignments(unfilteredAssignments)
-            assignments = ""
-            # create string of assignments
-            assignmentCount = 1
-            for assignment in filteredAssignments:
-                # splices the assignment string based off length
-                if len(assignment) < 70:
-                    assignments += str(assignmentCount) + ". " + assignment + "\n\n"
-                    assignmentCount += 1
-                else:
-                    startingIndex = 70
-                    index = 0
-                    # looks for a space to start a new line
-                    for char in range(startingIndex, len(assignment)):
-                        if assignment[char] == " ":
-                            assignments += str(assignmentCount) + ". " + assignment[0:startingIndex + index] + "\n" + assignment[startingIndex + index:len(assignment)] + "\n\n"
-                            break
-                        index += 1
-                    assignmentCount += 1
-                if assignmentCount == 6:
-                    break
-            # display them
-            assignmentsLabel.config(text=assignments)
-            if readAssignments == True:
-                # create a single readable string of assignments
-                readAssignmentString = "Hello, your upcoming assignments are: "
+        login = scrape.moodleLogin(USERNAME, PASSWORD)
+        if login == 1:
+            unfilteredAssignments = scrape.getMoodleAssignments()
+            # see if there are any upcoming assignments
+            if unfilteredAssignments != None:
+                filteredAssignments = filterAssignments(unfilteredAssignments)
+                assignments = ""
+                # create string of assignments
+                assignmentCount = 1
                 for assignment in filteredAssignments:
-                    readAssignmentString += assignment
-                #ceate and execute new thread so the GUI doesn't stop responding
-                thread = threading.Thread(target = readDueAssignments, args = (readAssignmentString,))
-                thread.start()
-            print("ASSIGNMENTS: " + assignments)
+                    # splices the assignment string based off length
+                    if len(assignment) < 70:
+                        assignments += str(assignmentCount) + ". " + assignment + "\n\n"
+                        assignmentCount += 1
+                    else:
+                        startingIndex = 70
+                        index = 0
+                        # looks for a space to start a new line
+                        for char in range(startingIndex, len(assignment)):
+                            if assignment[char] == " ":
+                                assignments += str(assignmentCount) + ". " + assignment[0:startingIndex + index] + "\n" + assignment[startingIndex + index:len(assignment)] + "\n\n"
+                                break
+                            index += 1
+                        assignmentCount += 1
+                    if assignmentCount == 6:
+                        break
+                # display them
+                assignmentsLabel.config(text=assignments)
+                if readAssignments == True:
+                    # create a single readable string of assignments
+                    readAssignmentString = "Hello, your upcoming assignments are: "
+                    for assignment in filteredAssignments:
+                        readAssignmentString += assignment
+                    #ceate and execute new thread so the GUI doesn't stop responding
+                    thread = threading.Thread(target = readDueAssignments, args = (readAssignmentString,))
+                    thread.start()
+                print("ASSIGNMENTS: " + assignments)
+    try:
+        if unfilteredAssignments != None:
+            pass
+    except:
+        assignmentsLabel.config(text = 'Login failed... \n Check if credentials are saved and correct!')
             
 def clockTime():
     textTime = time.strftime("%H:%M")
@@ -152,8 +161,6 @@ def clockTime():
     else:
         timeLabel.config(text=textTime + " AM")
     timeLabel.after(200, clockTime)
-
-
 
 # user input
 ALARM_TIME = None
@@ -232,7 +239,7 @@ clearAssignmentsBn = Button(home_frame, image=clearAssignmentsPhoto,
 clockTime()
 
 # Assignments Label
-assignmentsLabel = Label(home_frame, text = 'Loading, Please Wait', font = (FONT, 13), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
+assignmentsLabel = Label(home_frame, text = '', font = (FONT, 13), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
 assignmentsLabel.place(x = 75, y = 150, height = 300, width = 650)
 
 # Button to turn off alarm and only display assignments
@@ -343,13 +350,10 @@ def setRate(rate):
     
 # adds a slider to adjust the rate
 rateS = Scale(speak_frame, from_ = 0, to = 200, orient = HORIZONTAL, showvalue = 0, bg = FIELD_COLOR, fg = TEXT_COLOR, bd = BORDERWIDTH, font = (FONT, 25), length = 200, command = lambda x: setRate(x))
-rateS.place(x = 400, y = 220, height = 20, width = 150)
-
-homeBnSpk = Button(speak_frame, image = homePhoto, bg = BUTTON_COLOR, bd = BORDERWIDTH, command = lambda: raise_frame(home_frame))
-homeBnSpk.place(x = 0, y = 0, height = 60, width = 60)
+rateS.place(x = 400, y = 227, height = 20, width = 150)
 
 settingsBnSpk = Button(speak_frame, image = settingsPhoto, bg = BUTTON_COLOR, bd = BORDERWIDTH, command = lambda: raise_frame(control_frame))
-settingsBnSpk.place(x = 735, y = 0, height = 60, width = 60)
+settingsBnSpk.place(x = 0, y = 0, height = 60, width = 60)
 
 # pick alarm sounds from dropdown menu
 alarmSoundLabel = Label(speak_frame, text = "Alarm Sound:", font = (FONT, 25), fg = TEXT_COLOR, bg = BACKGROUND_COLOR)
@@ -367,8 +371,6 @@ alarmSoundDropDown.place(x = 400, y = 320, height = 40, width = 140)
 # the main operation
 def main():
     global ALARM_TIME
-    global USERNAME
-    global PASSWORD
     global assignmentLabel
     # first see if an alarm has even been set
     if ALARM_TIME != None:
