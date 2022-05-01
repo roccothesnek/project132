@@ -152,7 +152,7 @@ def displayAssignments(readAssignments):
                 thread.start()
             print("ASSIGNMENTS: " + assignments)
         else:
-            assignmentsLabel.config(text="Your credentials may be incorrect or you have no assignments.")
+            assignmentsLabel.config(text="Your credentials are incorrect or you have no assignments.")
     else:
         assignmentsLabel.config(text="No submitted credentials")
 
