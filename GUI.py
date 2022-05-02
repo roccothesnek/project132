@@ -18,18 +18,21 @@ def setTime():
     minBuffer = ""
     if int(currentMinute.get()) < 10:
         minBuffer = "0"
-    # if the meridiem is PM, add 12 hours
+    # if the meridiem is AM dont add any hours
     if currentMeridiem.get() == "AM":
         if currentHour.get() != "12":
             ALARM_TIME = currentHour.get() + " " + currentMinute.get()
             svdTimeLabel.config(text="Alarm Time: " + currentHour.get() + ":" + minBuffer + currentMinute.get() + " AM")
+        # unless its 12 at night
         else:
             ALARM_TIME = str(int(currentHour.get()) - 12) + " " + currentMinute.get()
             svdTimeLabel.config(text="Alarm Time: " + currentHour.get() + ":" + minBuffer + currentMinute.get() + " AM")
+    # if the meridiem is PM add 12 hours
     else:
         if currentHour.get() != "12":
             ALARM_TIME = str(int(currentHour.get()) + 12) + " " + currentMinute.get()
             svdTimeLabel.config(text="Alarm Time: " + currentHour.get() + ":" + minBuffer + currentMinute.get() + " PM")
+        # unless its noon
         else:
             ALARM_TIME = currentHour.get() + " " + currentMinute.get()
             svdTimeLabel.config(text="Alarm Time: " + currentHour.get() + ":" + minBuffer + currentMinute.get() + " PM")
@@ -49,16 +52,19 @@ def setCredentials():
 # takes unfiltered assignment list, and filters them based of if the type of assignment
 def filterAssignments(assignments):
     filteredAssignments = []
+    # count for only getting 5 assignments
     assignmentCount = 0
     for assignment in assignments:
-        assignmentCount += 1
+        # only get assignments that are either due or closing
         if (assignment["Event"].endswith("closes") or assignment["Event"].endswith("is due")):
-            if "Tomorrow" in assignment["Date"]:
+            # change wording if assignment is due today or tomorrow
+            if "Tomorrow" in assignment["Date"] or 'Today' in assignment["Date"]:
                 filteredAssignments.append(
                     assignment["Event"] + " " + assignment["Date"] + " in " + assignment["Class"])
             else:
                 filteredAssignments.append(
                     assignment["Event"] + " on " + assignment["Date"] + " in " + assignment["Class"])
+            assignmentCount += 1
         if assignmentCount == 6:
             break
     return filteredAssignments
@@ -69,9 +75,10 @@ def readDueAssignments(assignments):
     # disable sliders so they dont interfere with voice
     volumeS.config(state='disabled')
     rateS.config(state='disabled')
-    print(assignments)
+    
     engine.say(assignments)
     engine.runAndWait()
+    
     # enable sliders again
     volumeS.config(state='normal')
     rateS.config(state='normal')
@@ -94,7 +101,7 @@ def clearAssignments():
     raise_show_assignment_button()
     assignmentsLabel.config(text="")
 
-
+# shows that the assignments are loading on home screen
 def show_loading():
     assignmentsLabel.config(text="Loading...")
     root_window.update()
@@ -154,22 +161,27 @@ def displayAssignments(readAssignments):
         else:
             assignmentsLabel.config(text="Your credentials are incorrect or you have no assignments.")
     else:
-        assignmentsLabel.config(text="No submitted credentials")
+        assignmentsLabel.config(text="ERROR: No submitted credentials!")
 
-
+# controls clock widget
 def clockTime():
+    # formatting of clock
     textTime = time.strftime("%H:%M")
     hourTime = int(textTime[0:2])
+    # takes care of PM case
     if hourTime > 12:
         hourTime -= 12
         hourTime = str(hourTime)
         timeLabel.config(text=hourTime + textTime[2:len(textTime)] + " PM")
+    # takes care of midnight case
     elif hourTime == 0:
         hourTime += 12
         hourTime = str(hourTime)
         timeLabel.config(text=hourTime + textTime[2:len(textTime)] + " AM")
+    # takes care of AM case
     else:
         timeLabel.config(text=textTime + " AM")
+    # recurse
     timeLabel.after(200, clockTime)
 
 
@@ -214,8 +226,6 @@ speak_frame = Frame(root_window, bg=BACKGROUND_COLOR)
 control_frame.grid(row=0, column=0, sticky="nsew")
 home_frame.grid(row=0, column=0, sticky="nsew")
 speak_frame.grid(row=0, column=0, sticky="nsew")
-##############################################
-
 
 # Adding widgets to the frames ####################
 ####### Home Frame Widgets #######
@@ -331,7 +341,7 @@ passwordLabel.place(x=400, y=300, height=40, width=140)
 passwordBox = Entry(control_frame, show="*", font=(FONT, 25), bg=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH)
 passwordBox.place(x=545, y=300, height=40, width=140)
 
-## speak frame
+############# speak frame ###################
 volumeL = Label(speak_frame, text="Volume:", font=(FONT, 35), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
 volumeL.place(x=200, y=60, height=60, width=180)
 

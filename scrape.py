@@ -7,6 +7,10 @@ SESSION = requests.Session()
 def moodleLogin(username, password):
     ''' Simply logs in the session to moodle, takes 2 strings for username and password, this must be called before scraping assignments '''
     
+    
+    # forget cookies
+    SESSION.cookies.clear()
+    
     # payload for login POST request
     loginData = {
         'username': username,
@@ -33,9 +37,9 @@ def moodleLogin(username, password):
             return -1
         else:
             return 1
-    # if SESSION is already logged in, return 1
+    # if SESSION cant get webpage, return -1
     else:
-        return 1
+        return -1
     
 def getMoodleAssignments():
     ''' Once session is logged in, this will pull every event (unfiltered) and return a list of dictionaries for each event '''
