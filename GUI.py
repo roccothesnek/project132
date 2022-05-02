@@ -334,7 +334,7 @@ passwordBox.place(x=545, y=300, height=40, width=140)
 
 ## speak frame
 volumeL = Label(speak_frame, text="Volume:", font=(FONT, 35), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-volumeL.place(x=200, y=80, height=60, width=180)
+volumeL.place(x=200, y=60, height=60, width=180)
 
 
 # function to set the volume of the pyttsx3 engine
@@ -349,20 +349,20 @@ def setVolume(volume):
 # adds a slider to adjust the volume
 volumeS = Scale(speak_frame, from_=0, to=100, orient=HORIZONTAL, bg=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH,
                 font=(FONT, 25), length=200, command=lambda x: setVolume(x))
-volumeS.place(x=380, y=80, height=60, width=150)
+volumeS.place(x=380, y=60, height=60, width=150)
 
 # rate label
 rateL = Label(speak_frame, text="Rate of Speech:", font=(FONT, 35), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-rateL.place(x=90, y=200, height=60, width=300)
+rateL.place(x=90, y=150, height=60, width=300)
 
 rateLFast = Label(speak_frame, text="Fast", font=(FONT, 12), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-rateLFast.place(x=490, y=200, height=20, width=100)
+rateLFast.place(x=490, y=155, height=20, width=100)
 
 rateLNormal = Label(speak_frame, text=" Normal", font=(FONT, 12), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-rateLNormal.place(x=424, y=200, height=20, width=100)
+rateLNormal.place(x=424, y=155, height=20, width=100)
 
 rateLSlow = Label(speak_frame, text=" Slow", font=(FONT, 12), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-rateLSlow.place(x=380, y=200, height=20, width=70)
+rateLSlow.place(x=380, y=155, height=20, width=70)
 
 
 # function to set rate of the pyttsx3 engine
