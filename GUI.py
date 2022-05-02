@@ -376,7 +376,7 @@ def setRate(rate):
 # adds a slider to adjust the rate
 rateS = Scale(speak_frame, from_=0, to=300, orient=HORIZONTAL, showvalue=0, bg=FIELD_COLOR, fg=TEXT_COLOR,
               bd=BORDERWIDTH, font=(FONT, 25), length=200, command=lambda x: setRate(x))
-rateS.place(x=400, y=227, height=20, width=150)
+rateS.place(x=400, y=185, height=20, width=150)
 
 homeBnSpk = Button(speak_frame, image=homePhoto, bg=BUTTON_COLOR, bd=BORDERWIDTH,
                    command=lambda: raise_frame(home_frame))
@@ -389,7 +389,7 @@ backBn.place(x=735, y=0, height=60, width=60)
 
 # pick alarm sounds from dropdown menu
 alarmSoundLabel = Label(speak_frame, text="Alarm Sound:", font=(FONT, 25), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-alarmSoundLabel.place(x=200, y=320, height=40, width=180)
+alarmSoundLabel.place(x=200, y=260, height=40, width=180)
 
 alarmSoundOptions = ["Samsung.mp3", "Doom.mp3", "Nujabes.m4a", "wakeup_chill_alarm.mp3"]
 currentAlarmSound = StringVar(value="Samsung.mp3")
@@ -397,7 +397,7 @@ currentAlarmSound = StringVar(value="Samsung.mp3")
 alarmSoundDropDown = OptionMenu(speak_frame, currentAlarmSound, *alarmSoundOptions)
 alarmSoundDropDown.config(bg=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH, activebackground=BUTTON_COLOR)
 alarmSoundDropDown["menu"].config(bg=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH, activebackground=BUTTON_COLOR)
-alarmSoundDropDown.place(x=400, y=320, height=40, width=140)
+alarmSoundDropDown.place(x=400, y=260, height=40, width=140)
 
 
 ####################################
