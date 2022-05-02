@@ -374,7 +374,7 @@ def setRate(rate):
 
 
 # adds a slider to adjust the rate
-rateS = Scale(speak_frame, from_=0, to=200, orient=HORIZONTAL, showvalue=0, bg=FIELD_COLOR, fg=TEXT_COLOR,
+rateS = Scale(speak_frame, from_=0, to=300, orient=HORIZONTAL, showvalue=0, bg=FIELD_COLOR, fg=TEXT_COLOR,
               bd=BORDERWIDTH, font=(FONT, 25), length=200, command=lambda x: setRate(x))
 rateS.place(x=400, y=227, height=20, width=150)
 
