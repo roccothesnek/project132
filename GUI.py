@@ -359,7 +359,7 @@ rateLFast = Label(speak_frame, text="Fast", font=(FONT, 12), fg=TEXT_COLOR, bg=B
 rateLFast.place(x=490, y=200, height=20, width=100)
 
 rateLNormal = Label(speak_frame, text=" Normal", font=(FONT, 12), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-rateLNormal.place(x=420, y=200, height=20, width=100)
+rateLNormal.place(x=424, y=200, height=20, width=100)
 
 rateLSlow = Label(speak_frame, text=" Slow", font=(FONT, 12), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
 rateLSlow.place(x=380, y=200, height=20, width=70)
@@ -376,15 +376,16 @@ def setRate(rate):
 # adds a slider to adjust the rate
 rateS = Scale(speak_frame, from_=0, to=200, orient=HORIZONTAL, showvalue=0, bg=FIELD_COLOR, fg=TEXT_COLOR,
               bd=BORDERWIDTH, font=(FONT, 25), length=200, command=lambda x: setRate(x))
-rateS.place(x=400, y=220, height=20, width=150)
+rateS.place(x=400, y=227, height=20, width=150)
 
 homeBnSpk = Button(speak_frame, image=homePhoto, bg=BUTTON_COLOR, bd=BORDERWIDTH,
                    command=lambda: raise_frame(home_frame))
 homeBnSpk.place(x=0, y=0, height=60, width=60)
 
-settingsBnSpk = Button(speak_frame, image=settingsPhoto, bg=BUTTON_COLOR, bd=BORDERWIDTH,
+backIcon = PhotoImage(file = 'back.gif')
+backBn = Button(speak_frame, image=backIcon, bg=BUTTON_COLOR, bd=BORDERWIDTH,
                        command=lambda: raise_frame(control_frame))
-settingsBnSpk.place(x=735, y=0, height=60, width=60)
+backBn.place(x=735, y=0, height=60, width=60)
 
 # pick alarm sounds from dropdown menu
 alarmSoundLabel = Label(speak_frame, text="Alarm Sound:", font=(FONT, 25), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
