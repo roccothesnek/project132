@@ -238,13 +238,15 @@ readAssignmentsBn.place(x=760, y=40, height=40, width=40)
 # display assignments button
 displayAssignmentsPhoto = PhotoImage(file='show_icon.gif')
 displayAssignmentsBn = Button(home_frame, text="Clear Assignments", image=displayAssignmentsPhoto,
-                              command=lambda: displayAssignments(False), bd=BORDERWIDTH)
+                              command=lambda: displayAssignments(False), bd=BORDERWIDTH, 
+                              bg=BACKGROUND_COLOR, activebackground=BACKGROUND_COLOR)
 displayAssignmentsBn.place(x=760, y=0, height=40, width=40)
 
 # clear button
 clearAssignmentsPhoto = PhotoImage(file='clear_icon.gif')
 clearAssignmentsBn = Button(home_frame, image=clearAssignmentsPhoto,
-                            command=lambda: clearAssignments(), bd=BORDERWIDTH)
+                            command=lambda: clearAssignments(), bd=BORDERWIDTH, 
+                            bg=BACKGROUND_COLOR, activebackground=BACKGROUND_COLOR)
 
 # sets clock label to correct time
 clockTime()
@@ -252,9 +254,6 @@ clockTime()
 # Assignments Label
 assignmentsLabel = Label(home_frame, font=(FONT, 13), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
 assignmentsLabel.place(x=75, y=150, height=300, width=650)
-
-# Loading Bar
-loadingBar = Progressbar(home_frame, orient=HORIZONTAL, length=100, mode='indeterminate')
 
 # Button to turn off alarm and only display assignments
 stopAlarmBn1 = Button(home_frame, text="Only Display Assignments",
