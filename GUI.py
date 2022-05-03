@@ -197,6 +197,8 @@ FONT = 'Calibri'
 BUTTON_COLOR = "#1c5ffe"
 FIELD_COLOR = "#333742"
 BORDERWIDTH = 0
+# highlightthickness
+HLT = 0
 
 # initialize pyttsx3
 engine = pyttsx3.init()
@@ -206,6 +208,7 @@ engine.setProperty('rate', 150)
 root_window = Tk()
 # could be changed to automatically cover the whole screen when opened?
 root_window.geometry("800x500")
+root_window.title('Assignment Alarm Clock')
 
 # Divides the root window into two columns and a row.
 # The weight parameter controls the size of the rows/columns by forming a ratio
@@ -231,7 +234,7 @@ speak_frame.grid(row=0, column=0, sticky="nsew")
 ####### Home Frame Widgets #######
 # button that takes user to control_frame
 settingsPhoto = PhotoImage(file='settings_icon.gif')
-settingsBn = Button(home_frame, image=settingsPhoto, command=lambda: raise_frame(control_frame), bd=BORDERWIDTH)
+settingsBn = Button(home_frame, image=settingsPhoto, command=lambda: raise_frame(control_frame), bd=BORDERWIDTH, highlightthickness = 0)
 settingsBn.place(x=0, y=0, height=60, width=60)
 
 # Displays current time
@@ -242,19 +245,19 @@ timeLabel.place(x=220, y=50, height=100, width=360)
 readAssignmentsPhoto = PhotoImage(file='play_icon.gif')
 readAssignmentsBn = Button(home_frame,
                            image=readAssignmentsPhoto,
-                           command=lambda: displayAssignments(True), bd=BORDERWIDTH)
+                           command=lambda: displayAssignments(True), highlightthickness = HLT, bd=BORDERWIDTH)
 readAssignmentsBn.place(x=760, y=40, height=40, width=40)
 
 # display assignments button
 displayAssignmentsPhoto = PhotoImage(file='show_icon.gif')
-displayAssignmentsBn = Button(home_frame, text="Clear Assignments", image=displayAssignmentsPhoto,
+displayAssignmentsBn = Button(home_frame, highlightthickness = HLT, text="Clear Assignments", image=displayAssignmentsPhoto,
                               command=lambda: displayAssignments(False), bd=BORDERWIDTH, 
                               bg=BACKGROUND_COLOR, activebackground=BACKGROUND_COLOR)
 displayAssignmentsBn.place(x=760, y=0, height=40, width=40)
 
 # clear button
 clearAssignmentsPhoto = PhotoImage(file='clear_icon.gif')
-clearAssignmentsBn = Button(home_frame, image=clearAssignmentsPhoto,
+clearAssignmentsBn = Button(home_frame, highlightthickness = HLT, image=clearAssignmentsPhoto,
                             command=lambda: clearAssignments(), bd=BORDERWIDTH, 
                             bg=BACKGROUND_COLOR, activebackground=BACKGROUND_COLOR)
 
@@ -279,16 +282,16 @@ stopAlarmBn2 = Button(home_frame, text="Display and Read Assignments",
 ####### Control Frame Widgets #######
 # takes user back to home_frame
 homePhoto = PhotoImage(file='home_icon.gif')
-homeBn = Button(control_frame, command=lambda: raise_frame(home_frame), image=homePhoto, bd=BORDERWIDTH)
+homeBn = Button(control_frame, highlightthickness = HLT, command=lambda: raise_frame(home_frame), image=homePhoto, bd=BORDERWIDTH)
 homeBn.place(x=0, y=0, height=60, width=60)
 
 # button to show speak frame
-speakBn = Button(control_frame, text="Sound Settings", font=(FONT, 18), fg=TEXT_COLOR, bg=BUTTON_COLOR,
-                 command=lambda: raise_frame(speak_frame))
+speakBn = Button(control_frame, text="Sound Settings", highlightthickness = HLT, font=(FONT, 18), fg=TEXT_COLOR, bg=BUTTON_COLOR,
+                 command=lambda: raise_frame(speak_frame), bd = BORDERWIDTH)
 speakBn.place(x=600, y=0, height=40, width=200)
 
 # sets the input for the time the user specified
-alarmSetBn = Button(control_frame, bg=BUTTON_COLOR, fg=TEXT_COLOR, text="Set Alarm", font=(FONT, 20),
+alarmSetBn = Button(control_frame, bg=BUTTON_COLOR, highlightthickness = HLT, fg=TEXT_COLOR, text="Set Alarm", font=(FONT, 20),
                     command=lambda: setTime(), bd=BORDERWIDTH)
 alarmSetBn.place(x=300, y=150, height=50, width=200)
 
@@ -301,7 +304,7 @@ hourLabel = Label(control_frame, fg=TEXT_COLOR, text="Hour:", font=(FONT, 25), b
 hourLabel.place(x=100, y=100, height=40, width=75)
 currentHour = StringVar(value=1)
 hourSpin = Spinbox(control_frame, from_=1, to=12, textvariable=currentHour, wrap=True, readonlybackground=FIELD_COLOR,
-                   fg=TEXT_COLOR, bd=BORDERWIDTH, font=(FONT, 25), buttonbackground=BUTTON_COLOR, state='readonly')
+                   fg=TEXT_COLOR, bd=BORDERWIDTH, highlightthickness = HLT, font=(FONT, 25), buttonbackground=BUTTON_COLOR, state='readonly')
 hourSpin.place(x=180, y=100, height=40, width=80)
 
 # lets user set the minute with a spin box
@@ -309,7 +312,7 @@ minuteLabel = Label(control_frame, text="Minute:", font=(FONT, 25), fg=TEXT_COLO
 minuteLabel.place(x=280, y=100, height=40, width=110)
 currentMinute = StringVar(value=0)
 minuteSpin = Spinbox(control_frame, from_=0, to=59, textvariable=currentMinute, wrap=True, state='readonly',
-                     readonlybackground=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH, font=(FONT, 25),
+                     readonlybackground=FIELD_COLOR, highlightthickness = HLT, fg=TEXT_COLOR, bd=BORDERWIDTH, font=(FONT, 25),
                      buttonbackground=BUTTON_COLOR)
 minuteSpin.place(x=395, y=100, height=40, width=80)
 
@@ -325,7 +328,7 @@ meridiemDropDown["menu"].config(bg=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH, a
 meridiemDropDown.place(x=645, y=100, height=40, width=75)
 
 # sets the input for the credentials the user specified
-loginSetBn = Button(control_frame, text="Save Credentials", font=(FONT, 20), bg=BUTTON_COLOR, fg=TEXT_COLOR,
+loginSetBn = Button(control_frame, text="Save Credentials", highlightthickness = HLT, font=(FONT, 20), bg=BUTTON_COLOR, fg=TEXT_COLOR,
                     bd=BORDERWIDTH, command=lambda: setCredentials())
 loginSetBn.place(x=300, y=350, height=50, width=200)
 
@@ -333,12 +336,12 @@ loginSetBn.place(x=300, y=350, height=50, width=200)
 credentialsLabel = Label(control_frame, text="Moodle Credentials", font=(FONT, 35), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
 credentialsLabel.place(x=150, y=240, height=50, width=500)
 usernameLabel = Label(control_frame, text="Username:", font=(FONT, 25), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-usernameLabel.place(x=100, y=300, height=40, width=140)
-usernameBox = Entry(control_frame, fg=TEXT_COLOR, bg=FIELD_COLOR, font=(FONT, 25), bd=BORDERWIDTH)
+usernameLabel.place(x=90, y=300, height=40, width=150)
+usernameBox = Entry(control_frame, highlightthickness = HLT, fg=TEXT_COLOR, bg=FIELD_COLOR, font=(FONT, 25), bd=BORDERWIDTH)
 usernameBox.place(x=245, y=300, height=40, width=140)
 passwordLabel = Label(control_frame, text="Password:", fg=TEXT_COLOR, bg=BACKGROUND_COLOR, font=(FONT, 25))
 passwordLabel.place(x=400, y=300, height=40, width=140)
-passwordBox = Entry(control_frame, show="*", font=(FONT, 25), bg=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH)
+passwordBox = Entry(control_frame, highlightthickness = HLT, show="*", font=(FONT, 25), bg=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH)
 passwordBox.place(x=545, y=300, height=40, width=140)
 
 ############# speak frame ###################
@@ -357,7 +360,7 @@ def setVolume(volume):
 
 # adds a slider to adjust the volume
 volumeS = Scale(speak_frame, from_=0, to=100, orient=HORIZONTAL, bg=FIELD_COLOR, fg=TEXT_COLOR, bd=BORDERWIDTH,
-                font=(FONT, 25), length=200, command=lambda x: setVolume(x))
+                font=(FONT, 25), highlightthickness = HLT, length=200, command=lambda x: setVolume(x))
 volumeS.place(x=380, y=60, height=60, width=150)
 
 # rate label
@@ -365,13 +368,13 @@ rateL = Label(speak_frame, text="Rate of Speech:", font=(FONT, 35), fg=TEXT_COLO
 rateL.place(x=90, y=150, height=60, width=300)
 
 rateLFast = Label(speak_frame, text="Fast", font=(FONT, 12), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-rateLFast.place(x=490, y=155, height=20, width=100)
+rateLFast.place(x=500, y=155, height=20, width=100)
 
 rateLNormal = Label(speak_frame, text=" Normal", font=(FONT, 12), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-rateLNormal.place(x=424, y=155, height=20, width=100)
+rateLNormal.place(x=434, y=155, height=20, width=100)
 
 rateLSlow = Label(speak_frame, text=" Slow", font=(FONT, 12), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
-rateLSlow.place(x=380, y=155, height=20, width=70)
+rateLSlow.place(x=390, y=155, height=20, width=50)
 
 
 # function to set rate of the pyttsx3 engine
@@ -385,14 +388,14 @@ def setRate(rate):
 # adds a slider to adjust the rate
 rateS = Scale(speak_frame, from_=0, to=300, orient=HORIZONTAL, showvalue=0, bg=FIELD_COLOR, fg=TEXT_COLOR,
               bd=BORDERWIDTH, font=(FONT, 25), length=200, command=lambda x: setRate(x))
-rateS.place(x=400, y=185, height=20, width=150)
+rateS.place(x=410, y=185, height=20, width=150)
 
-homeBnSpk = Button(speak_frame, image=homePhoto, bg=BUTTON_COLOR, bd=BORDERWIDTH,
+homeBnSpk = Button(speak_frame, highlightthickness = HLT, image=homePhoto, bg=BUTTON_COLOR, bd=BORDERWIDTH,
                    command=lambda: raise_frame(home_frame))
 homeBnSpk.place(x=0, y=0, height=60, width=60)
 
 backIcon = PhotoImage(file = 'back.gif')
-backBn = Button(speak_frame, image=backIcon, bg=BUTTON_COLOR, bd=BORDERWIDTH,
+backBn = Button(speak_frame, highlightthickness = HLT, image=backIcon, bg=BUTTON_COLOR, bd=BORDERWIDTH,
                        command=lambda: raise_frame(control_frame))
 backBn.place(x=735, y=0, height=60, width=60)
 
@@ -400,7 +403,7 @@ backBn.place(x=735, y=0, height=60, width=60)
 alarmSoundLabel = Label(speak_frame, text="Alarm Sound:", font=(FONT, 25), fg=TEXT_COLOR, bg=BACKGROUND_COLOR)
 alarmSoundLabel.place(x=200, y=260, height=40, width=180)
 
-alarmSoundOptions = ["Samsung.mp3", "Doom.mp3", "Nujabes.m4a", "wakeup_chill_alarm.mp3"]
+alarmSoundOptions = ["Samsung.mp3", "Doom.mp3", "chill.mp3"]
 currentAlarmSound = StringVar(value="Samsung.mp3")
 
 alarmSoundDropDown = OptionMenu(speak_frame, currentAlarmSound, *alarmSoundOptions)
