@@ -24,14 +24,14 @@ def moodleLogin(username, password):
     r = SESSION.get(url)
     
     # check if already logged in
-    soup = BeautifulSoup(r.content, 'html5lib')
+    soup = BeautifulSoup(r.content, 'html.parser')
     if soup.find('form', id = 'fm1') != None:
         # use bs to find hidden title "execution" value and attach to payload
-        soup = BeautifulSoup(r.content, 'html5lib')
+        soup = BeautifulSoup(r.content, 'html.parser')
         loginData['execution'] = soup.find('input', attrs={'name': 'execution'})['value']
         # send post request to log in
         r = SESSION.post(url, data = loginData)
-        soup = BeautifulSoup(r.content, 'html5lib')
+        soup = BeautifulSoup(r.content, 'html.parser')
         # return 1 if the login was successful, -1 if unsuccessful
         if soup.find('form', id = 'fm1') != None:
             return -1
@@ -49,7 +49,7 @@ def getMoodleAssignments():
     r = SESSION.get(url)
     
     # uses bs to find all events, dates, and classes
-    soup = BeautifulSoup(r.content, 'html5lib')
+    soup = BeautifulSoup(r.content, 'html.parser')
     # get all events
     for event in soup.find_all('div', class_ = "event mt-3"):
         # get event name and date
@@ -91,7 +91,7 @@ def getWebworkAssignments(className):
     # get the webpage
     url = "https://webwork.latech.edu/webwork2/" + className + "/"
     r = SESSION.get(url)
-    soup = BeautifulSoup(r.content, 'html5lib')
+    soup = BeautifulSoup(r.content, 'html.parser')
     
     # get each assignment
     for assignment in soup.find_all('tr'):
